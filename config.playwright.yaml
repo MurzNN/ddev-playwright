@@ -1,5 +1,7 @@
 #ddev-generated
 hooks:
+  pre-start:
+    - exec-host: "xhost +local:docker"
   post-start:
     - exec: "sudo chown $DDEV_USER ~/.cache/ms-playwright"
     - exec: "npx playwright install"
@@ -7,4 +9,3 @@ hooks:
 # Allows connection to the X server on the host machine for GUI applications.
 web_environment:
   - DISPLAY=:0
-
