@@ -42,6 +42,17 @@ health_checks() {
   DDEV_DEBUG=true run ddev npx playwright install --list
   assert_success
   assert_output --partial ".cache/ms-playwright/chromium_headless_shell-"
+
+  run ddev exec printenv DISPLAY
+  assert_success
+  assert_output --partial ":0"
+
+  run ddev exec printenv LIBGL_ALWAYS_SOFTWARE
+  assert_success
+  assert_output --partial "1"
+
+  assert_file_contains "${TESTDIR}/.ddev/config.playwright.yaml" 'exec-host: "xhost +local:docker"'
+  assert_file_contains "${TESTDIR}/.ddev/config.playwright.yaml" "LIBGL_ALWAYS_SOFTWARE=1"
 }
 
 teardown() {

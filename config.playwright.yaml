@@ -1,11 +1,17 @@
 #ddev-generated
+# X11 forwarding for GUI apps (Playwright headed mode, Chrome, etc.) in the web container.
 hooks:
   pre-start:
     - exec-host: "xhost +local:docker"
+    - exec-host: 'mkdir -p "${HOME}/.cache/ms-playwright" && { [ -O "${HOME}/.cache/ms-playwright" ] || sudo chown "$(id -u):$(id -g)" "${HOME}/.cache/ms-playwright"; }'
   post-start:
-    - exec: "sudo chown $DDEV_USER ~/.cache/ms-playwright"
     - exec: "npx playwright install"
 
-# Allows connection to the X server on the host machine for GUI applications.
 web_environment:
   - DISPLAY=:0
+  # Without this, Chromium/Mesa hang trying to use GPU/DRM inside Docker (no window appears).
+  - LIBGL_ALWAYS_SOFTWARE=1
+
+# Alternative when bind-mounting /tmp/.X11-unix is not possible (e.g. rootless Docker on macOS):
+# web_environment:
+#   - DISPLAY=host.docker.internal:0

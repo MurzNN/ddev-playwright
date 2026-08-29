@@ -5,8 +5,3 @@ services:
       - "${HOME}/.cache/ms-playwright:${HOME}/.cache/ms-playwright"
       # Allows connection to the X server on the host machine for GUI applications.
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
-
-volumes:
-  playwright:
-    name: ddev-playwright
-    external: true
